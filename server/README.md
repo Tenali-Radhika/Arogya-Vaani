@@ -31,7 +31,7 @@ data/doctors.json      25 FICTIONAL doctors       scripts/murf_voices.py, murf_s
 ```bash
 bun run setup && cp .env.example .env.local   # from the repo root, then fill the keys
 bun run dev                                   # backend + web
-bun run test                                  # 104 tests, no keys or network needed
+bun run test                                  # 109 tests, no keys or network needed
 ```
 
 See `.env.example` for every variable. Never put `PORT` in `.env.local` for tests; the suite sets its own env.

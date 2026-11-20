@@ -136,7 +136,7 @@ schedule_followup(BK…)                        -> reminder T-12h, feedback T+2h
 
 [eval/results.md](eval/results.md): 30 scripted code-mixed utterances (10 each Hinglish/Hindi, Kanglish/Kannada, English). The deterministic router scores 21/21 on specialty routing and 9/9 on red-flag recall. This is a small developer-written smoke test, not a benchmark; two labels were corrected after the first run (documented in the file). A second table with a real LLM is generated when `LLM_API_KEY` is set.
 
-Backend: **104 pytest tests** (clinic API holds/idempotency/expiry, red flags in 3 languages, ranking, SSE contract, tool loop, hot-swap, speak limits, scheduling, server wiring). Web: `bun run verify` (API contract + production build).
+Backend: **109 pytest tests** (clinic API holds/idempotency/expiry, red flags in 3 languages, ranking, SSE contract, tool loop, hot-swap, speak limits, scheduling, server wiring). Web: `bun run verify` (API contract + production build).
 
 ## Run it locally
 

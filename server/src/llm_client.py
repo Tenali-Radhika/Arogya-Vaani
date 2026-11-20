@@ -14,6 +14,8 @@ from typing import AsyncIterator, Dict, List, Optional
 
 import httpx
 
+import http_util
+
 logger = logging.getLogger("arogya.llm")
 
 
@@ -41,7 +43,7 @@ async def _stream_one(cfg: dict, messages: List[dict], tools: Optional[List[dict
     calls: Dict[int, dict] = {}
     t0 = time.perf_counter()
     first = True
-    async with httpx.AsyncClient(timeout=httpx.Timeout(20.0, connect=6.0)) as c:
+    async with httpx.AsyncClient(timeout=httpx.Timeout(20.0, connect=6.0), transport=http_util._transport_override) as c:
         async with c.stream("POST", cfg["base"] + "/chat/completions", json=body,
                             headers={"Authorization": f"Bearer {cfg['key']}"}) as r:
             if r.status_code != 200:

@@ -27,7 +27,7 @@ Conversational AI and Murf Falcon. Read [CLAUDE.md](./CLAUDE.md) for the product
 ```bash
 bun run setup        # venv + web deps
 bun run dev          # backend :8000 + web :3000
-bun run test         # backend pytest (104 tests)
+bun run test         # backend pytest (109 tests)
 bun run verify       # web: doctor + API contract + production build
 ```
 
