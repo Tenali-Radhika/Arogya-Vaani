@@ -15,6 +15,14 @@ type QuickstartTranscriptPanelProps = {
 	agentUID: string;
 };
 
+/** Language tag per line, detected from the script of the text. */
+function scriptTag(text?: string): string | null {
+	if (!text) return null;
+	if (/[ಀ-೿]/.test(text)) return "ಕನ್ನಡ";
+	if (/[ऀ-ॿ]/.test(text)) return "हिन्दी";
+	return "EN";
+}
+
 function formatMessageTime(createdAt?: number) {
 	if (!createdAt) return null;
 	return new Intl.DateTimeFormat(undefined, {
@@ -61,12 +69,13 @@ export function QuickstartTranscriptPanel({
 			>
 				{messages.length === 0 ? (
 					<div className="flex h-full items-center justify-center text-center text-sm text-muted-foreground">
-						Start speaking to see the live transcript here.
+						Speak in Hindi, Kannada or English: the live transcript appears here.
 					</div>
 				) : (
 					messages.map((message, index) => {
 						const isAgent = String(message.uid) === agentUID;
-						const label = isAgent ? "Agent" : "You";
+						const label = isAgent ? "ArogyaVaani" : "You";
+						const tag = scriptTag(message.text);
 						const text = message.text?.trim();
 						const time = formatMessageTime(message.createdAt);
 
@@ -77,7 +86,8 @@ export function QuickstartTranscriptPanel({
 							>
 								<div className="mb-1 flex items-center gap-2 px-1 text-xs font-semibold text-muted-foreground">
 									<span>{label}</span>
-									{time ? <span className="font-normal">{time}</span> : null}
+									{tag ? <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">{tag}</span> : null}
+										{time ? <span className="font-normal">{time}</span> : null}
 								</div>
 								<div
 									className={`max-w-full whitespace-pre-wrap rounded-xl border px-3 py-2 text-sm leading-6 ${

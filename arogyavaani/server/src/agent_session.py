@@ -175,12 +175,13 @@ class AgentSessionManager:
                 return i18n.format_template(i18n.RECAP_BOOKED, lang, doctor=doc["name"], when=i18n.when_phrase(d, t, lang))
         return i18n.RECAP_NONE[lang]
 
-    async def hot_swap(self, session_id: str, new_lang: str) -> Dict[str, Any]:
+    async def hot_swap(self, session_id: str, new_lang: str, force: bool = False) -> Dict[str, Any]:
+        """Leave + re-join. force=True restarts even in the same language (e.g. to apply elder-mode TTS rate)."""
         new_lang = i18n.normalize_lang(new_lang)
         st = self.live.get(session_id)
         if not st:
             raise ValueError("no live agent for this session")
-        if st["lang"] == new_lang:
+        if st["lang"] == new_lang and not force:
             return {"ok": True, "swapped": False, "lang": new_lang}
         t0 = time.perf_counter()
         hub.publish(session_id, {"type": "language_swap", "phase": "start", "from": st["lang"], "to": new_lang})

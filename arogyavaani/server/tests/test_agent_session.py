@@ -108,3 +108,17 @@ def test_spoken_time_phrases():
     assert i18n.spoken_time("10:30", "hi-IN") == "सुबह साढ़े दस बजे"
     assert i18n.spoken_time("15:00", "en-IN") == "3:00 PM"
     assert i18n.spoken_time("09:00", "kn-IN").startswith("ಬೆಳಿಗ್ಗೆ")
+
+
+async def test_force_swap_applies_elder_rate(monkeypatch):
+    m = a.AgentSessionManager()
+    _live(m)
+    seen = {}
+
+    async def fake_start(sid, channel, agent_uid, user_uid, lang, patient_id, elder, greeting=None, codec=None):
+        seen["lang"], seen["elder"] = lang, elder
+        _live(m, sid, lang)
+    monkeypatch.setattr(m, "start", fake_start)
+    m.live["s1"]["elder"] = True
+    res = await m.hot_swap("s1", "hi-IN", force=True)
+    assert res["swapped"] and seen == {"lang": "hi-IN", "elder": True}

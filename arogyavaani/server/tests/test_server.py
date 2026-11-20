@@ -183,3 +183,16 @@ def test_static_and_clinic_mounted(srv):
     assert srv.get("/clinic/v1/slots", params={"doctor_id": "doc01", "date": next_weekday_date()}).status_code == 200
     assert srv.get("/llm/health").json()["status"] == "ok"
     assert "openapi" in srv.get("/openapi.json").json()
+
+
+def test_elder_toggle_restarts_live_agent(srv, monkeypatch):
+    start(srv, patientId="lakshmi")
+    calls = []
+
+    async def fake_swap(sid, lang, force=False):
+        calls.append((sid, lang, force))
+        return {"ok": True, "swapped": True}
+    monkeypatch.setattr(srv.server.manager, "hot_swap", fake_swap)
+    r = srv.post("/session/sx/elder", params={"on": "true"}).json()
+    assert r["restarted"] and calls == [("sx", "hi-IN", True)]
+    assert db.get_patient("lakshmi").elder_mode is True

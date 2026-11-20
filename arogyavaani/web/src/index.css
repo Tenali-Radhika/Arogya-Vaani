@@ -182,3 +182,14 @@ body {
 		max-height: 3.5rem;
 	}
 }
+
+/* Elder mode: larger type and higher contrast (toggled on <html>) */
+html.elder {
+	font-size: 125%;
+	--muted-foreground: 220 15% 82%;
+	--border: 220 10% 38%;
+}
+html.elder button,
+html.elder [role="radio"] {
+	min-height: 2.75rem;
+}

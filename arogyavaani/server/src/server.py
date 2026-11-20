@@ -201,13 +201,20 @@ async def session_speak(session_id: str, req: SpeakRequest):
 
 @router.post("/session/{session_id}/elder")
 async def session_elder(session_id: str, on: bool = True):
+    """Elder mode lowers the Falcon rate by 10. TTS can't change on a live agent, so restart it (same channel, memory kept)."""
     st = manager.live.get(session_id)
-    if st:
-        st["elder"] = on
     pid = st["patient_id"] if st else db.get_call_session(session_id).patient_id
     if pid:
         db.upsert_patient(pid, elder_mode=on)
-    return {"code": 0, "elder_mode": on, "note": "applies from the next agent (re)start / language swap"}
+    restarted = False
+    if st:
+        st["elder"] = on
+        try:
+            await manager.hot_swap(session_id, st["lang"], force=True)
+            restarted = True
+        except Exception as e:
+            raise _http_error(e)
+    return {"code": 0, "elder_mode": on, "restarted": restarted}
 
 
 # ------------------------------------------------------------------ After: proactive call

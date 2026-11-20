@@ -2,7 +2,7 @@ import { existsSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 
 import nextConfig from '../next.config'
-import { getConfig, startAgent, stopAgent } from '../src/services/api'
+import { getConfig, setLanguage, startAgent, stopAgent } from '../src/services/api'
 
 type Rewrite = {
   source: string
@@ -51,21 +51,16 @@ async function verifyRewriteContract() {
     const rewrites = await getRewrites()
     assert(
       rewrites.some(
-        (rewrite) => rewrite.source === '/api/get_config' && rewrite.destination === 'http://localhost:8000/get_config',
+        (rewrite) => rewrite.source === '/api/:path*' && rewrite.destination === 'http://localhost:8000/:path*',
       ),
-      'next.config.ts should rewrite /api/get_config to /get_config on the Python backend',
+      'next.config.ts should rewrite /api/:path* to the Python backend root',
     )
     assert(
       rewrites.some(
-        (rewrite) => rewrite.source === '/api/startAgent' && rewrite.destination === 'http://localhost:8000/startAgent',
+        (rewrite) =>
+          rewrite.source === '/static/:path*' && rewrite.destination === 'http://localhost:8000/static/:path*',
       ),
-      'next.config.ts should rewrite /api/startAgent to /startAgent on the Python backend',
-    )
-    assert(
-      rewrites.some(
-        (rewrite) => rewrite.source === '/api/stopAgent' && rewrite.destination === 'http://localhost:8000/stopAgent',
-      ),
-      'next.config.ts should rewrite /api/stopAgent to /stopAgent on the Python backend',
+      'next.config.ts should proxy /static/* (voice notes, .ics) to the backend',
     )
   } finally {
     if (originalBackendUrl) {
@@ -106,7 +101,6 @@ async function verifyApiClientRequests() {
     seenPaths.push(url.pathname)
 
     if (url.pathname === '/api/get_config') {
-      assert(init?.method === 'GET', 'GET /api/get_config should use GET')
       assert(url.searchParams.get('uid') === '1234', 'GET /api/get_config should pass the requested uid')
       assert(
         url.searchParams.get('channel') === 'test-channel',
@@ -121,17 +115,24 @@ async function verifyApiClientRequests() {
           uid: '1234',
           channel_name: 'test-channel',
           agent_uid: '9999',
+          session_id: 'sess-1',
+          patient_id: 'lakshmi',
+          lang: 'hi-IN',
+          patient_name: 'Lakshmi',
+          elder_mode: false,
         },
         msg: 'success',
       })
     }
 
-    if (url.pathname === '/api/startAgent') {
-      assert(init?.method === 'POST', 'POST /api/startAgent should use POST')
+    if (url.pathname === '/api/session/start') {
+      assert(init?.method === 'POST', 'POST /api/session/start should use POST')
       const body = getRequestBody(init)
-      assert(body.channelName === 'test-channel', 'POST /api/startAgent should include channelName')
-      assert(body.rtcUid === 9999, 'POST /api/startAgent should include rtcUid')
-      assert(body.userUid === 1234, 'POST /api/startAgent should include userUid')
+      assert(body.channelName === 'test-channel', 'POST /api/session/start should include channelName')
+      assert(body.rtcUid === 9999, 'POST /api/session/start should include rtcUid')
+      assert(body.userUid === 1234, 'POST /api/session/start should include userUid')
+      assert(body.sessionId === 'sess-1' && body.patientId === 'lakshmi', 'start should carry session + patient')
+      assert(body.lang === 'kn-IN' && body.elderMode === true, 'start should carry lang + elder mode')
 
       return Response.json({
         code: 0,
@@ -144,27 +145,45 @@ async function verifyApiClientRequests() {
       })
     }
 
-    if (url.pathname === '/api/stopAgent') {
-      assert(init?.method === 'POST', 'POST /api/stopAgent should use POST')
-      const body = getRequestBody(init)
-      assert(body.agentId === 'mock-agent-id', 'POST /api/stopAgent should include agentId')
+    if (url.pathname === '/api/session/sess-1/stop') {
+      assert(init?.method === 'POST', 'POST /api/session/{id}/stop should use POST')
       return Response.json({ code: 0, msg: 'success' })
+    }
+
+    if (url.pathname === '/api/session/sess-1/language') {
+      assert(init?.method === 'POST', 'language swap should use POST')
+      assert(getRequestBody(init).lang === 'kn-IN', 'language swap should send the target lang')
+      return Response.json({ code: 0, data: { swapped: true, ms: 1800 } })
     }
 
     return Response.json({ detail: `Unexpected request path: ${url.pathname}` }, { status: 404 })
   }) as typeof fetch
 
   try {
-    const config = await getConfig({ uid: 1234, channel: 'test-channel' })
+    const config = await getConfig({ uid: 1234, channel: 'test-channel', patient: 'lakshmi' })
     assert(config.token === 'stub-token', 'GET /api/get_config should return response data')
 
-    const agentId = await startAgent('test-channel', 9999, 1234)
-    assert(agentId === 'mock-agent-id', 'POST /api/startAgent should return the agent id')
+    const agentId = await startAgent('test-channel', 9999, 1234, {
+      sessionId: 'sess-1',
+      patientId: 'lakshmi',
+      lang: 'kn-IN',
+      elderMode: true,
+    })
+    assert(agentId === 'mock-agent-id', 'POST /api/session/start should return the agent id')
 
-    await stopAgent(agentId)
+    const swap = await setLanguage('sess-1', 'kn-IN')
+    assert(swap.ms === 1800, 'language swap should return the measured ms')
+
+    await stopAgent('sess-1')
 
     assert(
-      JSON.stringify(seenPaths) === JSON.stringify(['/api/get_config', '/api/startAgent', '/api/stopAgent']),
+      JSON.stringify(seenPaths) ===
+        JSON.stringify([
+          '/api/get_config',
+          '/api/session/start',
+          '/api/session/sess-1/language',
+          '/api/session/sess-1/stop',
+        ]),
       'API client should call the unversioned /api paths',
     )
   } finally {

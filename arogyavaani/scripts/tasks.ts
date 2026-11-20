@@ -13,8 +13,8 @@ const venvPython = path.join(
   process.platform === 'win32' ? 'Scripts' : 'bin',
   process.platform === 'win32' ? 'python.exe' : 'python',
 )
-const compileTargets = ["server.py","agent.py","llm.py"]
-const requiredEnv = ["AGORA_APP_ID","AGORA_APP_CERTIFICATE","CUSTOM_LLM_URL"]
+const compileTargets = ["server.py","agent_session.py","llm.py","llm_client.py","clinic_api.py","db.py","tools/handlers.py","tools/registry.py","notify.py","scheduler.py","triage.py","i18n.py","kb.py","directory.py","events.py","http_util.py"]
+const requiredEnv = ["AGORA_APP_ID","AGORA_APP_CERTIFICATE","CUSTOM_LLM_URL","CUSTOM_LLM_API_KEY","LLM_API_KEY","SARVAM_API_KEY","MURF_API_KEY","MURF_VOICE_ID"]
 const publicUrlKey = "CUSTOM_LLM_URL"
 const requirements = ["requirements.txt"]
 const setupMessage = "\nSetup complete! Next steps:\n   1. agora project env write server/.env.local   (or fill it in manually)\n   2. ngrok http 8000                            (expose the backend; Agora cloud calls /llm)\n   3. Add CUSTOM_LLM_URL=<tunnel-url>/llm/chat/completions to server/.env.local\n   4. bun run dev\n\n"

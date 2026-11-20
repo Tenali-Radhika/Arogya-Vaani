@@ -8,7 +8,11 @@ import {
 	getConversationIssueSeverity,
 } from "@/components/ConversationErrorCard";
 import { MicrophoneSelector } from "@/components/MicrophoneSelector";
-import { QuickstartConversationLayout } from "@/components/QuickstartConversationLayout";
+import { ArogyaLayout } from "@/components/ArogyaLayout";
+import { AppointmentCard, DoctorCards, RedFlagBanner, StageBar } from "@/components/arogya/Cards";
+import { ElderToggle, LanguagePill, TalkButton, type TalkState } from "@/components/arogya/Controls";
+import { InboxDrawer } from "@/components/arogya/Overlays";
+import { ActionTimeline } from "@/components/arogya/Timeline";
 import {
 	type QuickstartAgentMetric,
 	QuickstartPipelineMetrics,
@@ -34,7 +38,6 @@ import {
 	type UserTranscription,
 } from "agora-agent-client-toolkit";
 import { AgentVisualizer } from "agora-agent-uikit";
-import { MicButtonWithVisualizer } from "agora-agent-uikit/rtc";
 import {
 	RemoteUser,
 	type UID,
@@ -84,6 +87,13 @@ function isRtmSalStatusPayload(value: unknown): value is RtmSalStatusPayload {
 export default function ConversationComponent({
 	agoraData,
 	rtmClient,
+	session,
+	lang,
+	elder,
+	events,
+	derived,
+	onLanguageChange,
+	onElderChange,
 	onTokenWillExpire,
 	onEndConversation,
 }: ConversationComponentProps) {
@@ -434,8 +444,31 @@ export default function ConversationComponent({
 		onEndConversation();
 	}, [client, localMicrophoneTrack, onEndConversation]);
 
+	const talkState: TalkState = useMemo(() => {
+		if (!isEnabled) return "muted";
+		if (derived.swapping) return "connecting";
+		switch (visualizerState) {
+			case "listening":
+				return "listening";
+			case "analyzing":
+				return "thinking";
+			case "talking":
+				return "speaking";
+			case "ambient":
+				return "idle";
+			default:
+				return "connecting";
+		}
+	}, [isEnabled, visualizerState, derived.swapping]);
+
+	const inboxRefresh = useMemo(
+		() => events.filter((e) => e.type === "inbox").length,
+		[events],
+	);
+
 	return (
-		<QuickstartConversationLayout
+		<ArogyaLayout
+			p50Ms={derived.p50}
 			statusPanel={
 				<ConnectionStatusPanel
 					connectionState={connectionState}
@@ -446,6 +479,7 @@ export default function ConversationComponent({
 				/>
 			}
 			pipelineMetrics={<QuickstartPipelineMetrics metrics={agentMetrics} />}
+			toolbar={<InboxDrawer patientId={session.patientId} refreshKey={inboxRefresh} />}
 			transcriptPanel={
 				<QuickstartTranscriptPanel
 					messageList={messageList}
@@ -453,38 +487,44 @@ export default function ConversationComponent({
 					agentUID={agentUID}
 				/>
 			}
-			visualizer={
-				<section
-					className="relative flex h-full min-h-[20rem] w-full max-w-4xl items-center justify-center"
-					aria-label="AI agent status visualization"
-				>
-					<AgentVisualizer state={visualizerState} size="lg" />
-					{remoteUsers.map((user) => (
-						<div key={user.uid} className="hidden">
-							<RemoteUser user={user} />
-						</div>
-					))}
-				</section>
-			}
-			controls={
-				<fieldset
-					className="mx-auto flex w-fit items-center gap-3 rounded-full border border-border bg-card/80 px-4 py-2 backdrop-blur-md"
-					aria-label="Audio controls"
-				>
-					<div className="conversation-mic-host flex items-center justify-center">
-						<MicButtonWithVisualizer
-							isEnabled={isEnabled}
-							setIsEnabled={setIsEnabled}
-							track={localMicrophoneTrack}
-							onToggle={handleMicToggle}
-							className="overflow-visible"
-							aria-label={isEnabled ? "Mute microphone" : "Unmute microphone"}
-							enabledColor="hsl(var(--primary))"
-							disabledColor="hsl(var(--destructive))"
-						/>
+			timelinePanel={<ActionTimeline events={events} />}
+			patientPane={
+				<section className="mx-auto flex w-full max-w-xl flex-col gap-4 pb-6" aria-label="Patient app">
+					<StageBar stage={derived.stage} />
+					{derived.redFlag ? <RedFlagBanner reason={derived.redFlag.reason} /> : null}
+					{session.patientName ? (
+						<p className="text-center text-sm text-muted-foreground">Namaste, {session.patientName}</p>
+					) : null}
+					<div className="flex flex-col items-center gap-4 py-2">
+						<TalkButton state={talkState} lang={lang} onToggle={handleMicToggle} />
+						<LanguagePill lang={lang} onChange={onLanguageChange} swapping={derived.swapping} />
+						{derived.lastSwapMs ? (
+							<p className="text-xs text-muted-foreground">Last language swap: {(derived.lastSwapMs / 1000).toFixed(1)} s, memory kept</p>
+						) : null}
+						<ElderToggle on={elder} onChange={onElderChange} />
+						<fieldset className="flex items-center gap-2 border-0 p-0" aria-label="Microphone">
+							<MicrophoneSelector localMicrophoneTrack={localMicrophoneTrack} />
+						</fieldset>
 					</div>
-					<MicrophoneSelector localMicrophoneTrack={localMicrophoneTrack} />
-				</fieldset>
+					{derived.appointment ? (
+						<AppointmentCard
+							booking={derived.appointment.booking}
+							doctor={derived.appointment.doctor}
+							voiceNote={derived.voiceNote}
+							ics={derived.ics}
+						/>
+					) : (
+						<DoctorCards doctors={derived.doctors} />
+					)}
+					<div className="hidden" aria-hidden>
+						<AgentVisualizer state={visualizerState} size="sm" />
+						{remoteUsers.map((user) => (
+							<div key={user.uid}>
+								<RemoteUser user={user} />
+							</div>
+						))}
+					</div>
+				</section>
 			}
 			onEndConversation={handleEndConversation}
 		/>

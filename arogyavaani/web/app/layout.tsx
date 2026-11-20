@@ -15,9 +15,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-	title: "Tool Calling Recipe | Agora Conversational AI",
+	title: "ArogyaVaani | health in your language",
 	description:
-		"Recipe: a voice agent that calls a tool, with execution inside your own OpenAI-compatible endpoint.",
+		"Voice-first healthcare assistant for Bharat: talk in Hindi, Kannada or English to find a doctor who speaks your language, book a real slot, and get a reminder call. Built on Agora Conversational AI and Murf Falcon.",
 	icons: {
 		icon: [
 			{ url: "/favicon.ico" },

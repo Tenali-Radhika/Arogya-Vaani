@@ -85,7 +85,7 @@ async def generate_voice_note(text: str, lang: str, booking_id: str) -> Optional
     name = f"{booking_id}-{h}.mp3"
     path = os.path.join(static_dir(), "voice", name)
     if not os.path.exists(path):
-        body = {"text": text, "voiceId": murf_voice_id(), "model": "FALCON", "locale": lang,
+        body = {"text": text, "voiceId": murf_voice_id(), "model": os.getenv("MURF_HTTP_MODEL", "falcon-2.1"), "locale": lang,
                 "format": "MP3", "sampleRate": 24000, "pronunciationDictionary": PRONUNCIATIONS}
         r = await request("murf_voice_note", "POST", f"{murf_http_base()}/v1/speech/stream",
                           headers={"api-key": key, "Content-Type": "application/json"}, json=body)

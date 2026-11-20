@@ -53,7 +53,7 @@ async def test_voice_note_calls_murf_and_caches(monkeypatch):
     assert req.url.path == "/v1/speech/stream" and req.headers["api-key"] == "mk"
     import json
     body = json.loads(req.content)
-    assert body["model"] == "FALCON" and body["locale"] == "hi-IN" and body["voiceId"] == "Neeta" and body["format"] == "MP3"
+    assert body["model"] == "falcon-2.1" and body["locale"] == "hi-IN" and body["voiceId"] == "Neeta" and body["format"] == "MP3"
 
 
 async def test_twilio_failure_falls_back_to_inbox(monkeypatch):
