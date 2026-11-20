@@ -1,0 +1,12 @@
+fastapi>=0.100.0
+uvicorn>=0.20.0
+requests>=2.31.0
+python-dotenv>=1.0.0
+agora-agents>=2.3.0
+# Enables httpx to route through a SOCKS proxy (e.g. all_proxy=socks5://...)
+socksio>=1.0.0
+sqlmodel>=0.0.16
+apscheduler>=3.10,<4
+httpx>=0.24
+rank-bm25>=0.2.2
+websockets>=12

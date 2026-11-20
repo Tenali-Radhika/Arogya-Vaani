@@ -1,0 +1,763 @@
+{
+ "_note": "FICTIONAL DEMO DATA - not real doctors",
+ "doctors": [
+  {
+   "id": "doc01",
+   "name": "Dr. Suresh Rao",
+   "specialty": "orthopaedics",
+   "clinic": "Rao Clinic, Jayanagar",
+   "area": "Jayanagar",
+   "lat": 12.9332,
+   "lng": 77.5814,
+   "languages_spoken": [
+    "kn",
+    "hi",
+    "en"
+   ],
+   "fee_inr": 600,
+   "pmjay_empanelled": true,
+   "rating": 4.7,
+   "schedule": {
+    "start": "09:00",
+    "end": "13:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc02",
+   "name": "Dr. Meera Iyer",
+   "specialty": "orthopaedics",
+   "clinic": "Iyer Clinic, Jayanagar",
+   "area": "Jayanagar",
+   "lat": 12.9296,
+   "lng": 77.585,
+   "languages_spoken": [
+    "en",
+    "ta",
+    "hi"
+   ],
+   "fee_inr": 800,
+   "pmjay_empanelled": false,
+   "rating": 4.8,
+   "schedule": {
+    "start": "16:00",
+    "end": "20:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc03",
+   "name": "Dr. Anand Gowda",
+   "specialty": "orthopaedics",
+   "clinic": "Gowda Clinic, Koramangala",
+   "area": "Koramangala",
+   "lat": 12.9304,
+   "lng": 77.6293,
+   "languages_spoken": [
+    "kn",
+    "en"
+   ],
+   "fee_inr": 700,
+   "pmjay_empanelled": true,
+   "rating": 4.5,
+   "schedule": {
+    "start": "10:00",
+    "end": "14:00",
+    "days": [
+     0,
+     2,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc04",
+   "name": "Dr. Farhan Sheikh",
+   "specialty": "orthopaedics",
+   "clinic": "Sheikh Clinic, Whitefield",
+   "area": "Whitefield",
+   "lat": 12.9734,
+   "lng": 77.7464,
+   "languages_spoken": [
+    "hi",
+    "en"
+   ],
+   "fee_inr": 900,
+   "pmjay_empanelled": false,
+   "rating": 4.6,
+   "schedule": {
+    "start": "10:00",
+    "end": "16:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc05",
+   "name": "Dr. Lakshmi Narayan",
+   "specialty": "general physician",
+   "clinic": "Narayan Clinic, Jayanagar",
+   "area": "Jayanagar",
+   "lat": 12.9308,
+   "lng": 77.5838,
+   "languages_spoken": [
+    "kn",
+    "hi",
+    "en"
+   ],
+   "fee_inr": 400,
+   "pmjay_empanelled": true,
+   "rating": 4.6,
+   "schedule": {
+    "start": "09:00",
+    "end": "13:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc06",
+   "name": "Dr. Ramesh Patil",
+   "specialty": "general physician",
+   "clinic": "Patil Clinic, Malleshwaram",
+   "area": "Malleshwaram",
+   "lat": 12.9999,
+   "lng": 77.5683,
+   "languages_spoken": [
+    "kn",
+    "hi",
+    "en"
+   ],
+   "fee_inr": 350,
+   "pmjay_empanelled": true,
+   "rating": 4.4,
+   "schedule": {
+    "start": "09:00",
+    "end": "17:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc07",
+   "name": "Dr. Sunita Verma",
+   "specialty": "general physician",
+   "clinic": "Verma Clinic, Whitefield",
+   "area": "Whitefield",
+   "lat": 12.9746,
+   "lng": 77.7452,
+   "languages_spoken": [
+    "hi",
+    "en"
+   ],
+   "fee_inr": 500,
+   "pmjay_empanelled": true,
+   "rating": 4.5,
+   "schedule": {
+    "start": "09:00",
+    "end": "15:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc08",
+   "name": "Dr. Kavya Shetty",
+   "specialty": "general physician",
+   "clinic": "Shetty Clinic, HSR Layout",
+   "area": "HSR Layout",
+   "lat": 12.9128,
+   "lng": 77.6377,
+   "languages_spoken": [
+    "kn",
+    "en",
+    "te"
+   ],
+   "fee_inr": 450,
+   "pmjay_empanelled": false,
+   "rating": 4.7,
+   "schedule": {
+    "start": "10:00",
+    "end": "18:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc09",
+   "name": "Dr. Prakash Hegde",
+   "specialty": "cardiology",
+   "clinic": "Hegde Clinic, Jayanagar",
+   "area": "Jayanagar",
+   "lat": 12.9284,
+   "lng": 77.5862,
+   "languages_spoken": [
+    "kn",
+    "en",
+    "hi"
+   ],
+   "fee_inr": 1000,
+   "pmjay_empanelled": true,
+   "rating": 4.8,
+   "schedule": {
+    "start": "10:00",
+    "end": "13:00",
+    "days": [
+     1,
+     3,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc10",
+   "name": "Dr. Anitha Menon",
+   "specialty": "cardiology",
+   "clinic": "Menon Clinic, Indiranagar",
+   "area": "Indiranagar",
+   "lat": 12.9724,
+   "lng": 77.6348,
+   "languages_spoken": [
+    "en",
+    "ml",
+    "hi"
+   ],
+   "fee_inr": 1200,
+   "pmjay_empanelled": false,
+   "rating": 4.9,
+   "schedule": {
+    "start": "14:00",
+    "end": "18:00",
+    "days": [
+     0,
+     2,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc11",
+   "name": "Dr. Vikram Joshi",
+   "specialty": "cardiology",
+   "clinic": "Joshi Clinic, Rajajinagar",
+   "area": "Rajajinagar",
+   "lat": 12.9939,
+   "lng": 77.5496,
+   "languages_spoken": [
+    "hi",
+    "kn",
+    "en"
+   ],
+   "fee_inr": 900,
+   "pmjay_empanelled": true,
+   "rating": 4.5,
+   "schedule": {
+    "start": "09:00",
+    "end": "12:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc12",
+   "name": "Dr. Shalini Reddy",
+   "specialty": "gynaecology",
+   "clinic": "Reddy Clinic, Koramangala",
+   "area": "Koramangala",
+   "lat": 12.934,
+   "lng": 77.6257,
+   "languages_spoken": [
+    "te",
+    "kn",
+    "en",
+    "hi"
+   ],
+   "fee_inr": 800,
+   "pmjay_empanelled": false,
+   "rating": 4.7,
+   "schedule": {
+    "start": "10:00",
+    "end": "16:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc13",
+   "name": "Dr. Pooja Kulkarni",
+   "specialty": "gynaecology",
+   "clinic": "Kulkarni Clinic, Malleshwaram",
+   "area": "Malleshwaram",
+   "lat": 12.9987,
+   "lng": 77.5695,
+   "languages_spoken": [
+    "kn",
+    "hi",
+    "en"
+   ],
+   "fee_inr": 600,
+   "pmjay_empanelled": true,
+   "rating": 4.6,
+   "schedule": {
+    "start": "09:00",
+    "end": "13:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc14",
+   "name": "Dr. Rekha Nair",
+   "specialty": "gynaecology",
+   "clinic": "Nair Clinic, Whitefield",
+   "area": "Whitefield",
+   "lat": 12.9734,
+   "lng": 77.7464,
+   "languages_spoken": [
+    "ml",
+    "en",
+    "hi"
+   ],
+   "fee_inr": 850,
+   "pmjay_empanelled": false,
+   "rating": 4.5,
+   "schedule": {
+    "start": "11:00",
+    "end": "17:00",
+    "days": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc15",
+   "name": "Dr. Arjun Bhat",
+   "specialty": "paediatrics",
+   "clinic": "Bhat Clinic, Jayanagar",
+   "area": "Jayanagar",
+   "lat": 12.9308,
+   "lng": 77.5838,
+   "languages_spoken": [
+    "kn",
+    "en",
+    "hi"
+   ],
+   "fee_inr": 500,
+   "pmjay_empanelled": true,
+   "rating": 4.8,
+   "schedule": {
+    "start": "09:00",
+    "end": "14:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc16",
+   "name": "Dr. Divya Prabhu",
+   "specialty": "paediatrics",
+   "clinic": "Prabhu Clinic, HSR Layout",
+   "area": "HSR Layout",
+   "lat": 12.908,
+   "lng": 77.6425,
+   "languages_spoken": [
+    "kn",
+    "en"
+   ],
+   "fee_inr": 600,
+   "pmjay_empanelled": false,
+   "rating": 4.6,
+   "schedule": {
+    "start": "16:00",
+    "end": "20:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc17",
+   "name": "Dr. Imran Khan",
+   "specialty": "paediatrics",
+   "clinic": "Khan Clinic, Yelahanka",
+   "area": "Yelahanka",
+   "lat": 13.1055,
+   "lng": 77.5915,
+   "languages_spoken": [
+    "hi",
+    "kn",
+    "en"
+   ],
+   "fee_inr": 400,
+   "pmjay_empanelled": true,
+   "rating": 4.4,
+   "schedule": {
+    "start": "09:00",
+    "end": "15:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc18",
+   "name": "Dr. Neha Agarwal",
+   "specialty": "dermatology",
+   "clinic": "Agarwal Clinic, Indiranagar",
+   "area": "Indiranagar",
+   "lat": 12.9796,
+   "lng": 77.6396,
+   "languages_spoken": [
+    "hi",
+    "en"
+   ],
+   "fee_inr": 900,
+   "pmjay_empanelled": false,
+   "rating": 4.7,
+   "schedule": {
+    "start": "11:00",
+    "end": "18:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc19",
+   "name": "Dr. Girish Murthy",
+   "specialty": "dermatology",
+   "clinic": "Murthy Clinic, Jayanagar",
+   "area": "Jayanagar",
+   "lat": 12.9284,
+   "lng": 77.5862,
+   "languages_spoken": [
+    "kn",
+    "en",
+    "hi"
+   ],
+   "fee_inr": 600,
+   "pmjay_empanelled": true,
+   "rating": 4.5,
+   "schedule": {
+    "start": "10:00",
+    "end": "14:00",
+    "days": [
+     0,
+     2,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc20",
+   "name": "Dr. Sandeep Kamath",
+   "specialty": "ENT",
+   "clinic": "Kamath Clinic, Rajajinagar",
+   "area": "Rajajinagar",
+   "lat": 12.9855,
+   "lng": 77.546,
+   "languages_spoken": [
+    "kn",
+    "hi",
+    "en"
+   ],
+   "fee_inr": 550,
+   "pmjay_empanelled": true,
+   "rating": 4.6,
+   "schedule": {
+    "start": "09:00",
+    "end": "13:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc21",
+   "name": "Dr. Tanvi Desai",
+   "specialty": "ENT",
+   "clinic": "Desai Clinic, Koramangala",
+   "area": "Koramangala",
+   "lat": 12.9376,
+   "lng": 77.6221,
+   "languages_spoken": [
+    "hi",
+    "en",
+    "kn"
+   ],
+   "fee_inr": 750,
+   "pmjay_empanelled": false,
+   "rating": 4.7,
+   "schedule": {
+    "start": "14:00",
+    "end": "19:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc22",
+   "name": "Dr. Mohan Raj",
+   "specialty": "ophthalmology",
+   "clinic": "Raj Clinic, Malleshwaram",
+   "area": "Malleshwaram",
+   "lat": 13.0023,
+   "lng": 77.5659,
+   "languages_spoken": [
+    "kn",
+    "ta",
+    "en"
+   ],
+   "fee_inr": 500,
+   "pmjay_empanelled": true,
+   "rating": 4.8,
+   "schedule": {
+    "start": "09:00",
+    "end": "13:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc23",
+   "name": "Dr. Priya Subramanian",
+   "specialty": "ophthalmology",
+   "clinic": "Subramanian Clinic, Indiranagar",
+   "area": "Indiranagar",
+   "lat": 12.9736,
+   "lng": 77.6456,
+   "languages_spoken": [
+    "ta",
+    "en",
+    "hi"
+   ],
+   "fee_inr": 800,
+   "pmjay_empanelled": false,
+   "rating": 4.6,
+   "schedule": {
+    "start": "10:00",
+    "end": "16:00",
+    "days": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc24",
+   "name": "Dr. Harish Kini",
+   "specialty": "diabetology",
+   "clinic": "Kini Clinic, Yelahanka",
+   "area": "Yelahanka",
+   "lat": 13.1043,
+   "lng": 77.5927,
+   "languages_spoken": [
+    "kn",
+    "en",
+    "hi"
+   ],
+   "fee_inr": 500,
+   "pmjay_empanelled": true,
+   "rating": 4.5,
+   "schedule": {
+    "start": "09:00",
+    "end": "13:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "slot_minutes": 30
+   }
+  },
+  {
+   "id": "doc25",
+   "name": "Dr. Fatima Begum",
+   "specialty": "diabetology",
+   "clinic": "Begum Clinic, Jayanagar",
+   "area": "Jayanagar",
+   "lat": 12.9308,
+   "lng": 77.5838,
+   "languages_spoken": [
+    "hi",
+    "kn",
+    "en"
+   ],
+   "fee_inr": 450,
+   "pmjay_empanelled": true,
+   "rating": 4.7,
+   "schedule": {
+    "start": "15:00",
+    "end": "19:00",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "slot_minutes": 30
+   }
+  }
+ ],
+ "areas": {
+  "Jayanagar": [
+   12.9308,
+   77.5838
+  ],
+  "Koramangala": [
+   12.9352,
+   77.6245
+  ],
+  "Whitefield": [
+   12.9698,
+   77.75
+  ],
+  "Malleshwaram": [
+   13.0035,
+   77.5647
+  ],
+  "Indiranagar": [
+   12.9784,
+   77.6408
+  ],
+  "HSR Layout": [
+   12.9116,
+   77.6389
+  ],
+  "Rajajinagar": [
+   12.9915,
+   77.552
+  ],
+  "Yelahanka": [
+   13.1007,
+   77.5963
+  ]
+ }
+}
