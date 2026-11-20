@@ -413,10 +413,17 @@ async def ws_events(ws: WebSocket, session_id: str):
 
 
 app.include_router(router)
+app.include_router(router, prefix="/api", include_in_schema=False)  # same-origin path used by the built web app
 app.include_router(clinic_api.router)
 app.mount("/llm", llm_app)
 os.makedirs(notify.static_dir(), exist_ok=True)
 app.mount("/static", StaticFiles(directory=notify.static_dir()), name="static")
+
+
+# Built web app (STATIC_EXPORT=1 next build -> web/out). Mounted last so API routes win.
+_web_dir = os.getenv("WEB_DIR") or os.path.join(os.path.dirname(_base_dir), "web", "out")
+if os.path.isdir(_web_dir):
+    app.mount("/", StaticFiles(directory=_web_dir, html=True), name="web")
 
 
 if __name__ == "__main__":

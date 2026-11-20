@@ -1,0 +1,83 @@
+{
+  "channel": "<channel>",
+  "token": "<redacted>",
+  "agent_rtc_uid": "1001",
+  "remote_rtc_uids": [
+    "<user_uid>"
+  ],
+  "enable_string_uid": false,
+  "idle_timeout": 120,
+  "advanced_features": {
+    "enable_rtm": true,
+    "enable_tools": false
+  },
+  "asr": {
+    "vendor": "sarvam",
+    "params": {
+      "api_key": "<redacted>",
+      "language": "hi-IN"
+    },
+    "language": "en-US"
+  },
+  "tts": {
+    "vendor": "murf",
+    "params": {
+      "api_key": "<redacted>",
+      "base_url": "wss://in.api.murf.ai/v1/speech/stream-input",
+      "voiceId": "<multi-locale-voice>",
+      "locale": "hi-IN",
+      "rate": 0.0,
+      "pitch": 0.0,
+      "model": "FALCON",
+      "sample_rate": 24000
+    }
+  },
+  "llm": {
+    "url": "https://<host>/llm/chat/completions",
+    "params": {
+      "model": "arogya-agent",
+      "max_tokens": 400,
+      "temperature": 0.4
+    },
+    "style": "openai",
+    "input_modalities": [
+      "text"
+    ],
+    "api_key": "<redacted>",
+    "system_messages": [
+      {
+        "role": "system",
+        "content": "session=<session_id>;lang=hi-IN;patient=<patient_id>"
+      }
+    ],
+    "greeting_message": "नमस्ते! मैं ArogyaVaani हूँ। बताइए, आज क्या तकलीफ़ है?",
+    "failure_message": "एक second, network थोड़ा slow है।",
+    "max_history": 32,
+    "vendor": "custom"
+  },
+  "turn_detection": {
+    "config": {
+      "speech_threshold": 0.5,
+      "start_of_speech": {
+        "mode": "vad",
+        "vad_config": {
+          "interrupt_duration_ms": 160,
+          "prefix_padding_ms": 300
+        }
+      },
+      "end_of_speech": {
+        "mode": "vad",
+        "vad_config": {
+          "silence_duration_ms": 480
+        }
+      }
+    },
+    "language": "en-US"
+  },
+  "parameters": {
+    "data_channel": "rtm",
+    "enable_metrics": true,
+    "enable_error_message": true,
+    "audio_scenario": "chorus"
+  }
+}

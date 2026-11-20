@@ -1,0 +1,7 @@
+{$DOMAIN} {
+	encode zstd gzip
+	# SSE from /llm must not be buffered
+	reverse_proxy app:8000 {
+		flush_interval -1
+	}
+}

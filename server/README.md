@@ -1,49 +1,37 @@
-# Agora Agent Backend — Tool Calling Recipe
+# ArogyaVaani backend (FastAPI)
 
-FastAPI service that owns Agora token generation and agent session lifecycle for
-the tool-calling recipe. It is the service the web client reaches through the
-Next.js `/api/*` rewrite proxy (port 8000).
+One process serves everything on `:8000`:
 
-## What's different from the base quickstart
+| Path | What |
+| --- | --- |
+| `/llm/chat/completions` | OpenAI-compatible SSE endpoint Agora ConvoAI calls: tool loop, memory, safety gate (`src/llm.py`) |
+| `/clinic/v1/*` | Mock external Clinic Booking API: slots, 120 s holds, idempotent bookings, 409 on conflict (`src/clinic_api.py`) |
+| `/get_config`, `/session/*`, `/call/accept`, `/startAgent`, `/stopAgent` | Token minting and agent lifecycle for the web app (also under `/api/*`) |
+| `/console/*`, `/session/{id}/speak` | Nurse console data and the Agora `speak` takeover (header `X-Console-Password`) |
+| `/demo/*` | Demo controls (force conflict, fast-forward reminder, reset, seed); disabled with `DEMO_MODE=0` |
+| `/ws/events/{channel}` | Live tool/UI events; `patient:<id>` carries proactive `incoming_call` events |
+| `/healthz`, `/metrics` | Health checks (db, keys) and p50 turn latency |
+| `/`, `/static/*` | Built web app (when `web/out` exists) and generated voice notes / `.ics` files |
 
-The LLM stage uses the SDK's `CustomLLM` vendor instead of a managed
-`OpenAI(model="gpt-4o-mini")`. It points the agent at your own OpenAI-compatible
-endpoint (the `llm/` server in this repo) via `CUSTOM_LLM_URL`. STT (Deepgram)
-and TTS (MiniMax) remain Agora-managed.
+## Layout
 
-## Run
-
-Use the repo-root `README.md` for the full local flow (`bun run dev`). To work on
-this module directly:
-
-The root commands below select the correct virtualenv interpreter on macOS,
-Linux, and Windows, so activation is not required:
-
-```shell
-bun run setup:server
-bun run backend
+```
+src/server.py          routes + lifespan          src/agent_session.py  Agora lifecycle, language profiles, hot-swap, speak
+src/llm.py             brain: SSE tool loop       src/llm_client.py     provider adapter, streaming tool calls, failover
+src/tools/registry.py  typed tool registry        src/tools/handlers.py the 16 tools
+src/triage.py          red flags + specialty      src/kb.py             BM25 RAG over data/kb/*.md
+src/clinic_api.py      booking API                src/notify.py         messages, .ics, Murf voice note, Twilio
+src/scheduler.py       reminder/feedback jobs     src/db.py             SQLModel tables
+src/i18n.py            hi/kn/en strings, spoken times, voice language-switch detection
+data/doctors.json      25 FICTIONAL doctors       scripts/murf_voices.py, murf_say.py, gen_doctors.py
 ```
 
-## Environment
+## Run and test
 
-`server/.env.example` is the template. Required:
+```bash
+bun run setup && cp .env.example .env.local   # from the repo root, then fill the keys
+bun run dev                                   # backend + web
+bun run test                                  # 104 tests, no keys or network needed
+```
 
-- `AGORA_APP_ID`, `AGORA_APP_CERTIFICATE` — Agora project credentials.
-- `CUSTOM_LLM_URL` — the **public** chat-completions URL of your `llm/` endpoint
-  (e.g. `https://<tunnel>/chat/completions`). Agora cloud calls this directly, so
-  it cannot be `localhost`.
-- `CUSTOM_LLM_API_KEY` — forwarded by Agora cloud as `Authorization: Bearer`.
-  Required by the `CustomLLM` vendor.
-
-Optional: `CUSTOM_LLM_MODEL` (default `tool-mock`), `AGENT_GREETING`, `PORT`
-(default `8000`).
-
-## API
-
-- `GET /get_config` — token + channel/UID config
-- `POST /startAgent` — start an agent session
-- `POST /stopAgent` — stop an agent session
-
-The repo-root `bun run verify:local:fastapi` exercises these routes through the
-Next proxy using a fake agent (`scripts/run_fake_server.py`), so no live Agora
-session is required.
+See `.env.example` for every variable. Never put `PORT` in `.env.local` for tests; the suite sets its own env.

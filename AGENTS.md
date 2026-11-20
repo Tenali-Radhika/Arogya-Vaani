@@ -1,94 +1,43 @@
 # Agent Development Guide
 
-For coding agents working in `agent-recipes-python`. This repository is the
-**tool-calling** recipe (`Recipe Role: tool-calling`) in the Agora Conversational AI
-recipes family, derived from the base `agent-quickstart-python` template.
+For coding agents working on **ArogyaVaani**, a voice-first multilingual healthcare agent built on Agora
+Conversational AI and Murf Falcon. Read [CLAUDE.md](./CLAUDE.md) for the product brief and rules.
 
 ## System shape
 
-- **`server/`** — Python FastAPI agent backend (:8000). Owns Agora token
-  generation and agent session lifecycle. Uses the `CustomLLM` vendor to point the
-  agent's LLM stage at the tool-calling LLM endpoint. SDK: `agora-agents>=2.3.0`
-  (`import agora_agent`).
-- **`server/src/llm.py`** — provider-agnostic FastAPI tool-calling LLM endpoint,
-  mounted into the API server at `/llm` (so Agora cloud calls
-  `<public>/llm/chat/completions`). OpenAI-compatible `POST /chat/completions`
-  mock that internally runs a tool loop over a SQLite message log:
-  `run_agent_turn()` detects user intent and executes `log_message()` (persist a
-  note) or `list_messages()` (read notes back), then streams only the spoken reply.
-  No `agora-agents` dependency. This is the component a developer replaces.
-- **`web/`** — Next.js 16 / React 19 / TypeScript frontend (:3000), resynced from
-  the base quickstart.
-- Auth: Token007 from `AGORA_APP_ID` + `AGORA_APP_CERTIFICATE`.
-
-## Routing / ownership
-
-- UI and RTC/RTM lifecycle live in `web/`.
-- Browser-facing `/api/*` paths are Next rewrites (`web/next.config.ts`) to the
-  agent backend; do not add `web/app/api/**/route.ts` for agent/token logic.
-- Token generation and agent lifecycle live in `server/src/`.
-- The OpenAI `/chat/completions` contract and internal tool loop live in
-  `server/src/llm.py`.
-
-## Supported modes
-
-- **Local:** `bun run dev` starts `server` (:8000, serving `/llm`) and `web`
-  (:3000). The web app calls `/api/*`; Next rewrites to
-  `AGENT_BACKEND_URL=http://localhost:8000`. The backend must be exposed publicly
-  (`ngrok http 8000`) so Agora cloud can reach `/llm/chat/completions`.
-- **Deploy:** deploy `web` (Next) + `server` (a single publicly reachable FastAPI
-  process that also serves `/llm`, so Agora cloud can reach
-  `/llm/chat/completions`). Set `AGENT_BACKEND_URL` in the web deployment.
+- **`server/`**: FastAPI (:8000). `src/llm.py` is Agora's custom-LLM endpoint (tool loop, SSE); `src/agent_session.py` is the
+  only module that calls Agora's REST API (join / leave / speak, language hot-swap); `src/tools/` holds the 16 typed tools;
+  `src/clinic_api.py` is a mock external booking API that the tools call over HTTP.
+- **`web/`**: Next.js 16 / React 19 patient app (`/`) and nurse console (`/console`). In dev the browser calls `/api/*`
+  (Next rewrites to the backend). In production the app is exported statically (`STATIC_EXPORT=1`) and served by FastAPI.
+- Auth: Token007 from `AGORA_APP_ID` + `AGORA_APP_CERTIFICATE`; Agora cloud calls `/llm` with `Authorization: Bearer CUSTOM_LLM_API_KEY`.
 
 ## Patterns
 
-- Keep the web client calling `/api/*`; hide backend placement behind Next rewrites.
-- Keep token generation and the App Certificate in `server/`.
-- Keep `server/src/llm.py` free of `agora-agents` — it is provider-agnostic.
-- `CUSTOM_LLM_URL` is required and must be public; there is no localhost default.
-- Both `CUSTOM_LLM_URL` and `CUSTOM_LLM_API_KEY` are required by the `CustomLLM`
-  vendor (the SDK rejects one without the other).
-- The tool loop (`run_agent_turn` + `log_message` + `list_messages`) and its
-  SQLite store belong in `server/src/llm.py`; do not move tool execution into a
-  separate service.
-
-## Anti-patterns
-
-- Do not reintroduce Next Route Handlers for agent/token logic.
-- Do not add `agora-agents` to `server/src/llm.py`.
-- Do not default `CUSTOM_LLM_URL` to localhost.
-- Do not put `PORT` in `server/.env.example` (it would clobber the random port
-  that `verify:local:fastapi` injects via `load_dotenv(override=True)`).
-- Do not link to `docs/ai/` — that progressive-disclosure tree is not present yet.
+- `llm.py` and `tools/` must stay free of `agora_agent` imports (provider-agnostic); only `agent_session.py` and `server.py` use the SDK.
+- Verify any Agora or Murf field against the vendor docs before using it. The docs win over this repo's notes.
+- All outbound HTTP goes through `http_util.request` (8 s timeout, 1 retry, structured log). Tests inject transports with `http_util.set_transport`.
+- `CUSTOM_LLM_URL` must be public https; never default it to localhost. Do not put `PORT` in `server/.env.example`.
+- Tools never raise into the voice turn: `registry.run_tool` converts failures into `{ok: false, error}`.
+- Replies are voice: at most 2 short sentences, same language and script as the user. Red flags are handled deterministically before the LLM.
+- Source files containing Hindi/Kannada text: write them with the editor tool, not shell heredocs.
 
 ## Commands
 
 ```bash
-bun run setup
-bun run dev
-bun run doctor
-bun run doctor:local
-bun run verify         # web-only, no creds
-bun run verify:local   # full local gate
+bun run setup        # venv + web deps
+bun run dev          # backend :8000 + web :3000
+bun run test         # backend pytest (104 tests)
+bun run verify       # web: doctor + API contract + production build
 ```
-
-Narrower checks: `bun run verify:backend`, `bun run verify:local:fastapi`,
-`bun run verify:local:llm`, `bun run verify:web:proxy`.
 
 ## Done criteria
 
-1. Run the narrowest relevant verification command.
-2. Web-affecting changes: `bun run verify:web` passes.
-3. Backend-affecting changes: `bun run verify:local` (or the narrower
-   `verify:local:fastapi` / `verify:local:llm` / `verify:backend`) passes.
-4. If you change required env vars or setup steps, update the root README, the
-   relevant module README, and `server/.env.example` together.
+1. `bun run test` passes; web-affecting changes also pass `bun run verify:web`.
+2. If you change env vars or setup steps, update `README.md`, `server/README.md` and `server/.env.example` together.
 
 ## Git conventions
 
-- Conventional Commits: `type: description` or `type(scope): description`
-  (`feat`, `fix`, `chore`, `test`, `docs`). Lowercase after the prefix, present
-  tense.
-- No AI tool names in commit messages or PR descriptions. No `Co-Authored-By`
-  trailers. No `--no-verify`. No git config changes.
-- Branch names: `type/short-description` (e.g. `feat/tool-calling-expansion`).
+- Conventional Commits: `type: description` or `type(scope): description` (`feat`, `fix`, `chore`, `test`, `docs`), lowercase, present tense.
+- No AI tool names in commit messages or PR descriptions. No `Co-Authored-By` trailers. No `--no-verify`. No git config changes.
+- Branch names: `type/short-description`.
