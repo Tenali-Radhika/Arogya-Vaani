@@ -1,0 +1,182 @@
+[
+ {
+  "lang": "hi-IN",
+  "style": "Hinglish",
+  "text": "Mere ghutne mein bahut dard hai, chalne mein problem ho rahi hai",
+  "specialty": "orthopaedics"
+ },
+ {
+  "lang": "hi-IN",
+  "style": "Hinglish",
+  "text": "Bachche ko teen din se bukhar hai, doctor dikhana hai",
+  "specialty": "paediatrics"
+ },
+ {
+  "lang": "hi-IN",
+  "style": "Hinglish",
+  "text": "Meri aankh mein jalan ho rahi hai aur dhundhla dikhta hai",
+  "specialty": "ophthalmology"
+ },
+ {
+  "lang": "hi-IN",
+  "style": "Hinglish",
+  "text": "Sugar ki jaanch aur diabetes ka doctor chahiye",
+  "specialty": "diabetology"
+ },
+ {
+  "lang": "hi-IN",
+  "style": "Hinglish",
+  "text": "Kaan mein dard hai aur gala bhi kharab hai",
+  "specialty": "ENT"
+ },
+ {
+  "lang": "hi-IN",
+  "style": "Devanagari",
+  "text": "मुझे त्वचा पर बहुत खुजली हो रही है",
+  "specialty": "dermatology"
+ },
+ {
+  "lang": "hi-IN",
+  "style": "Devanagari",
+  "text": "कमर में दर्द है और झुकने में तकलीफ है",
+  "specialty": "orthopaedics"
+ },
+ {
+  "lang": "hi-IN",
+  "style": "Hinglish",
+  "text": "Seene mein bahut dard ho raha hai",
+  "red_flag": true
+ },
+ {
+  "lang": "hi-IN",
+  "style": "Devanagari",
+  "text": "सांस लेने में बहुत तकलीफ है",
+  "red_flag": true
+ },
+ {
+  "lang": "hi-IN",
+  "style": "Hinglish",
+  "text": "Pitaji ka munh tedha ho gaya hai aur bol nahi pa rahe",
+  "red_flag": true
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ನನಗೆ ಮೊಣಕಾಲು ನೋವು ಇದೆ, walking ಕಷ್ಟ ಆಗ್ತಿದೆ",
+  "specialty": "orthopaedics"
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ನನಗೆ ಜ್ವರ ಮತ್ತು ತಲೆನೋವು ಇದೆ",
+  "specialty": "general physician"
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ನನ್ನ ಕಣ್ಣು ಕೆಂಪಾಗಿದೆ, eye doctor ಬೇಕು",
+  "specialty": "ophthalmology"
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ಸಕ್ಕರೆ ಕಾಯಿಲೆ check ಮಾಡಿಸಬೇಕು",
+  "specialty": "diabetology"
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ಗಂಟಲು ನೋವು ಮತ್ತು ಕಿವಿ ನೋವು ಇದೆ",
+  "specialty": "ENT"
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ಮಗುವಿಗೆ ಜ್ವರ ಇದೆ, child specialist ಬೇಕು",
+  "specialty": "paediatrics"
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ನನ್ನ ಚರ್ಮದ ಮೇಲೆ ತುರಿಕೆ ಇದೆ",
+  "specialty": "dermatology"
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ಎದೆ ನೋವು ತುಂಬಾ ಇದೆ",
+  "red_flag": true
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ಉಸಿರಾಟದ ತೊಂದರೆ ಆಗ್ತಿದೆ",
+  "red_flag": true
+ },
+ {
+  "lang": "kn-IN",
+  "style": "Kanglish",
+  "text": "ತುಂಬಾ ರಕ್ತ ಹೋಗ್ತಿದೆ, ನಿಲ್ತಿಲ್ಲ",
+  "red_flag": true
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "I have severe knee pain and difficulty walking",
+  "specialty": "orthopaedics"
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "I have a fever and a bad cough since two days",
+  "specialty": "general physician"
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "My eye is itching and my vision is blurry",
+  "specialty": "ophthalmology"
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "I need a diabetes check up, my sugar is high",
+  "specialty": "diabetology"
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "I have an ear infection and throat pain",
+  "specialty": "ENT"
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "I have a skin rash on my arms",
+  "specialty": "dermatology"
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "I have back pain after lifting something heavy",
+  "specialty": "orthopaedics"
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "I have chest pain and my left arm feels heavy",
+  "red_flag": true
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "I can't breathe properly",
+  "red_flag": true
+ },
+ {
+  "lang": "en-IN",
+  "style": "English",
+  "text": "My newborn baby has a fever",
+  "red_flag": true
+ }
+]

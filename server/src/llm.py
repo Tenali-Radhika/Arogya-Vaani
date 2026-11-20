@@ -195,6 +195,13 @@ async def agent_turn(session_id: str, lang: str, patient_id: str, messages: List
             yield emit(i18n.EMERGENCY.get(lang, i18n.EMERGENCY["hi-IN"]))
             return
 
+        # 2b. Deterministic voice language switch ("Kannada dalli maathadi"): no LLM round-trip needed.
+        wanted = i18n.detect_language_request(user_text)
+        if wanted and wanted != lang:
+            await run_tool(ctx, "set_language", {"language": wanted})
+            yield emit(i18n.SWITCH_ACK[wanted])
+            return
+
         convo = [{"role": "system", "content": build_system_prompt(patient_id, session_id, lang, extra_prompt)}] + hist
         tool_ms = 0.0
         ttft_ms: Optional[float] = None

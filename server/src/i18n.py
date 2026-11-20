@@ -131,3 +131,33 @@ def when_phrase(iso: str, hhmm: str, lang: str) -> str:
 
 def format_template(table: Dict[str, str], lang: str, **kw) -> str:
     return table.get(lang, table["hi-IN"]).format(**kw)
+
+
+# ---- deterministic voice language-switch detection (no LLM needed for the hot-swap moment)
+_LANG_WORDS = {
+    "kn-IN": ["kannada", "kannad", "ಕನ್ನಡ"],
+    "hi-IN": ["hindi", "हिंदी", "हिन्दी", "ಹಿಂದಿ"],
+    "en-IN": ["english", "angrezi", "अंग्रेज़ी", "अंग्रेजी", "ಇಂಗ್ಲಿಷ್", "ಇಂಗ್ಲೀಷ್"],
+}
+_SWITCH_VERBS = ["maathadi", "mathadi", "matadi", "maatadi", "mathaadi", "baat", "bolo", "speak", "talk", "switch",
+                 "change", "बात", "बोलो", "बोलिए", "ಮಾತನಾಡಿ", "ಮಾತಾಡಿ", "ಮಾತಾಡು", "ಮಾತನಾಡು", "kijiye", "karo", "karein"]
+_DOCTOR_WORDS = ["doctor", "dr.", "dr ", "डॉक्टर", "ವೈದ್ಯ", "ಡಾಕ್ಟರ್", "clinic", "डॉ"]
+
+
+def detect_language_request(text: str):
+    """Return 'hi-IN' | 'kn-IN' | 'en-IN' if the user asks to change the conversation language, else None.
+    'doctor jo Kannada bolta ho' is a doctor preference, not a switch request."""
+    t = (text or "").lower()
+    if not t or any(w in t for w in _DOCTOR_WORDS):
+        return None
+    if not any(v in t for v in _SWITCH_VERBS):
+        return None
+    hits = [lang for lang, words in _LANG_WORDS.items() if any(w in t for w in words)]
+    return hits[0] if len(hits) == 1 else None
+
+
+SWITCH_ACK = {
+    "hi-IN": "ठीक है, हिंदी में बात करते हैं।",
+    "kn-IN": "ಸರಿ, ಕನ್ನಡದಲ್ಲಿ ಮಾತನಾಡೋಣ.",
+    "en-IN": "Sure, let's continue in English.",
+}

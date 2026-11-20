@@ -181,3 +181,28 @@ def test_system_prompt_includes_context():
     db.upsert_patient("p1", name="Lakshmi", area="Jayanagar", languages="kn,hi")
     p = llm.build_system_prompt("p1", "s1", "kn-IN")
     assert "Kannada" in p and "Lakshmi" in p and "IST" in p and "{{" not in p
+
+
+@pytest.mark.parametrize("text,expect", [
+    ("Kannada dalli maathadi", "kn-IN"),
+    ("kannada mein baat karo", "kn-IN"),
+    ("ಕನ್ನಡದಲ್ಲಿ ಮಾತನಾಡಿ", "kn-IN"),
+    ("Hindi mein baat karo please", "hi-IN"),
+    ("हिंदी में बात करो", "hi-IN"),
+    ("please speak english", "en-IN"),
+    ("doctor Kannada ya Hindi bolte ho to better", None),      # doctor preference, not a switch
+    ("Kannada bolne wale doctor chahiye", None),
+    ("mujhe ghutne mein dard hai", None),
+    ("Hindi ya Kannada mein baat karo", None),                   # ambiguous: leave it to the LLM
+])
+def test_detect_language_request(text, expect):
+    assert i18n.detect_language_request(text) == expect
+
+
+def test_voice_switch_bypasses_llm_and_queues_swap(monkeypatch):
+    fake = script([{"type": "text", "text": "never"}])
+    monkeypatch.setattr(llm_client, "stream_chat", fake)
+    from tools import handlers
+    r = post({"messages": [sysmsg(lang="hi-IN"), {"role": "user", "content": "Kannada dalli maathadi"}], "stream": True})
+    assert spoken(r.text) == i18n.SWITCH_ACK["kn-IN"] and not fake.calls
+    assert any(e["type"] == "tool_end" and e["tool"] == "set_language" for e in hub.recent("s1"))
